@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Website Blocker Options</title>
+</head>
+<body>
+  <h1>Blocked Websites</h1>
+  <textarea id="sites" rows="10" cols="40"></textarea><br><br>
+  <button id="save">Save</button>
+
+  <script>
+    const textarea = document.getElementById("sites");
+    const saveBtn = document.getElementById("save");
+
+    // Load current sites
+    chrome.storage.sync.get(["blockedSites"], (data) => {
+      if (data.blockedSites) {
+        textarea.value = data.blockedSites.join("\n");
+      }
+    });
+
+    // Save new list
+    saveBtn.addEventListener("click", () => {
+      const sites = textarea.value.split("\n").map(s => s.trim()).filter(s => s);
+      chrome.storage.sync.set({ blockedSites: sites }, () => {
+        alert("Blocked sites updated!");
+      });
+    });
+  </script>
+</body>
+</html>
